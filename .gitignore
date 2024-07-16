@@ -1,1 +1,60 @@
-venv
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Django stuff:
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+*.dat
+*.sqlite
+*.sqlite3-journal
+*.env
+
+# If your project includes separate frontend build files
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# If your project uses static files built by a build tool
+staticfiles/
+build/
+dist/
+
+# Local .env files and any secrets
+.env
+.env.*
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Pycharm
+.idea/
+
+# VS Code
+.vscode/
+
+# Optional
+# If you have any custom ignore rules specific to your project

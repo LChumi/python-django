@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ingreso y Visualización de Datos</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    {% load static %}
+    <script src="{% static 'myapp/js/chart.js' %}"></script>
+</head>
+<body>
+    <h1>Visualización de Temperatura Corporal en Tiempo Real</h1>
+    <canvas id="myChart" width="400" height="200"></canvas>
+    <button id="iniciarSimulacion">Iniciar Simulación</button>
+    <button id="reiniciar">Reiniciar</button>
+</body>
+</html>
