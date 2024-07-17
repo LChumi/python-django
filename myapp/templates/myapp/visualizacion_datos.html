@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualización de Datos</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-800">
+    <div class="container mx-auto p-4">
+        <h1 class="text-4xl font-bold mb-4 text-center text-blue-600">Visualización de Temperatura Corporal</h1>
+        <form id="dataForm" class="bg-white shadow-md rounded-lg p-4">
+            <div class="mb-4">
+                <label for="tiempo" class="block text-sm font-medium text-gray-700">Ingrese el tiempo de simulación (en minutos):</label>
+                <input type="number" id="tiempo" min="1" value="1" class="mt-1 p-2 border border-gray-300 rounded-md w-full">
+            </div>
+            <div class="mb-4">
+                <label for="intervalos" class="block text-sm font-medium text-gray-700">Número de intervalos:</label>
+                <input type="number" id="intervalos" min="1" value="10" class="mt-1 p-2 border border-gray-300 rounded-md w-full">
+            </div>
+            <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">Simular y Mostrar Gráfica</button>
+        </form>
+        <div class="mt-4 flex justify-center">
+            <img id="graph" src="" alt="Gráfica de datos" class="border border-gray-300 rounded-md">
+        </div>
+    </div>
+    <script>
+        document.getElementById('dataForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const tiempoSimulacion = document.getElementById('tiempo').value;
+            const intervalos = document.getElementById('intervalos').value;
+
+            fetch("{% url 'simular_datos' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ tiempo_simulacion: tiempoSimulacion, intervalos: intervalos })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const numIntervalos = data.tiempos.length;
+                let currentInterval = 0;
+
+                const intervalDuration = 500;  // Intervalo en ms para actualizar el gráfico
+                const intervalID = setInterval(() => {
+                    if (currentInterval < numIntervalos) {
+                        updateGraph({
+                            tiempos: data.tiempos.slice(0, currentInterval + 1),
+                            valores: data.valores.slice(0, currentInterval + 1)
+                        });
+                        currentInterval++;
+                    } else {
+                        clearInterval(intervalID);
+                    }
+                }, intervalDuration);
+            });
+        });
+
+        function updateGraph(data) {
+            fetch("{% url 'visualizacion_datos' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('graph').src = 'data:image/png;base64,' + data.image;
+            });
+        }
+    </script>
+</body>
+</html>
